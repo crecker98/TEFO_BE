@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: tefo
+  datasource:
+    url: jdbc:mysql://localhost:3306/tefo
+    username: root
+    password: issuper190698dj
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

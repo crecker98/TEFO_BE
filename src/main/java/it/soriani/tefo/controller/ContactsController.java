@@ -1,4 +1,4 @@
-package it.soriani.tefo.tefo.controller;
+package it.soriani.tefo.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
