@@ -1,15 +1,48 @@
 spring:
   application:
     name: tefo
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  output:
+    ansi:
+      enabled: always
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        format_sql: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 10
+          batch_versioned_data: true
+          fetch_size: 1000
+        generate_statistics: true
   datasource:
     url: jdbc:mysql://localhost:3306/tefo
     username: root
     password: issuper190698dj
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+
+springdoc:
+  api-docs:
+    path: /api/api-docs-json
+    enabled: true
+    groups:
+      enabled: true
+  swagger-ui:
+    path: /api/api-docs
