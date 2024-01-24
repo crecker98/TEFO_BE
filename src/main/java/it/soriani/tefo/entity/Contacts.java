@@ -4,6 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -13,6 +17,10 @@ import java.io.Serializable;
  */
 
 @Entity
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "contacts")
 public class Contacts implements Serializable {
 
@@ -21,6 +29,6 @@ public class Contacts implements Serializable {
     private int uid;
 
     @Column(name = "mutual", nullable = false)
-    private boolean mutual;
+    private int mutual;
 
 }
