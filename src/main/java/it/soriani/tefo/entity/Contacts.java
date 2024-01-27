@@ -26,7 +26,7 @@ public class Contacts implements Serializable {
 
     @Id
     @Column(name = "uid", updatable = false, nullable = false)
-    private int uid;
+    private Integer uid;
 
     @Column(name = "mutual", nullable = false)
     private int mutual;

@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.soriani.tefo.constants.GenericConstants;
-import it.soriani.tefo.dto.response.ContactsListResponseDTO;
-import it.soriani.tefo.entity.Contacts;
-import it.soriani.tefo.mapper.ContactsMapper;
-import it.soriani.tefo.service.ContactsService;
+import it.soriani.tefo.dto.response.UsersListResponseDTO;
+import it.soriani.tefo.entity.Users;
+import it.soriani.tefo.mapper.UsersMapper;
+import it.soriani.tefo.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,35 +21,35 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * @author christiansoriani on 15/01/24
+ * @author christiansoriani on 25/01/24
  * @project TEFO_BE
  */
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(GenericConstants.API_BASE_PATH + ContactsController.API_CONTEXT)
+@RequestMapping(GenericConstants.API_BASE_PATH + UsersController.API_CONTEXT)
 @Slf4j
-public class ContactsController {
+public class UsersController {
 
-    protected static final String API_CONTEXT = "/contacts";
+    protected static final String API_CONTEXT = "/users";
 
-    private final ContactsService contactsService;
-    private final ContactsMapper contactsMapper;
+    private final UsersService usersService;
+    private final UsersMapper usersMapper;
 
-    @GetMapping("/allContacts")
+    @GetMapping("/allUsers")
     @Operation(
-            summary = "Return all contacts from database",
-            description = "Return all result from table contacts in database",
+            summary = "Retrieve all users from database",
+            description = "Retrieve all result from table users in database",
             method = "GET",
-            tags = "contacts",
-            operationId = "allContacts",
+            tags = "users",
+            operationId = "allUsers",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @io.swagger.v3.oas.annotations.media.Schema(
-                                            implementation = ContactsListResponseDTO.class
+                                            implementation = UsersListResponseDTO.class
                                     )
                             ),
                             description = "List retrieved successfully"
@@ -69,13 +69,13 @@ public class ContactsController {
             }
     )
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ContactsListResponseDTO> allContacts() {
-        final List<Contacts> contactsList = contactsService.getAllContacts();
-        return ResponseEntity.ok(
-                ContactsListResponseDTO.builder()
-                        .payload(contactsMapper.entityListToDTOList(contactsList))
+    public ResponseEntity<UsersListResponseDTO> transferUsers() {
+        final List<Users> usersList = usersService.getAllUsers();
+        return ResponseEntity.ok()
+                .body(UsersListResponseDTO.builder()
+                        .payload(usersMapper.entityListToDtoList(usersList))
                         .build()
-        );
+                );
     }
 
 }
