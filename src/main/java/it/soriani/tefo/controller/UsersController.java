@@ -1,5 +1,6 @@
 package it.soriani.tefo.controller;
 
+import io.netty.buffer.Unpooled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import telegram4j.tl.TlDeserializer;
+import telegram4j.tl.User;
 
 import java.util.List;
 
@@ -71,6 +74,7 @@ public class UsersController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UsersListResponseDTO> transferUsers() {
         final List<Users> usersList = usersService.getAllUsers();
+        User user = TlDeserializer.deserialize(Unpooled.copiedBuffer(usersList.get(2).getData()));
         return ResponseEntity.ok()
                 .body(UsersListResponseDTO.builder()
                         .payload(usersMapper.entityListToDtoList(usersList))

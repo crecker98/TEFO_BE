@@ -35,7 +35,7 @@ public class Users implements Serializable {
     private byte[] data;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "uid", referencedColumnName = "uid")
+    @JoinColumn(name = "uid")
     private Contacts contact;
 
 }
