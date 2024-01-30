@@ -7,6 +7,7 @@ import it.soriani.tefo.dto.model.UsersDTO;
 import it.soriani.tefo.entity.Users;
 import it.soriani.tefo.mapper.UsersMapper;
 import it.soriani.tefo.repository.UsersRepository;
+import it.soriani.tefo.validation.UsersValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +19,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 /**
  * @author christiansoriani on 24/01/24
@@ -32,15 +32,30 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final UsersMapper usersMapper;
+    private final UsersValidation usersValidation;
+
+    public List<UsersDTO> getAllUserFiltered(UsersDTO.UsersManipulated usersManipulated) {
+        return null;
+    }
+
+    public List<UsersDTO> getAllUserFromContacts() {
+        final List<Users> usersList = usersRepository.findAllByContact_MutualAndStatusIsNot(1, 0);
+        return userConversion(usersList);
+    }
 
     public List<UsersDTO> getAllUsers() {
-        final List<Users> usersList = usersRepository.findAll().stream().filter(users -> users.getStatus() != 0).collect(Collectors.toList());
+        final List<Users> usersList = usersRepository.findAllByStatusIsNot(0);
+        return userConversion(usersList);
+    }
+
+    private List<UsersDTO> userConversion(List<Users> usersList) {
+        usersValidation.checkUsersList(usersList);
         final List<UsersDTO> usersDTOList = usersMapper.entityListToDtoList(usersList);
         usersDTOList.forEach(UsersService::convertUsersManipulatedManipulated);
         return usersDTOList;
     }
 
-    public static void convertUsersManipulatedManipulated(UsersDTO usersDTO) {
+    private static void convertUsersManipulatedManipulated(UsersDTO usersDTO) {
         String[] parsedName = usersDTO.getName().split(";;;");
         String nameAndSurname = parsedName[0];
         String username = "Username not found";
@@ -86,7 +101,7 @@ public class UsersService {
             }
         }
 
-        usersDTO.setContactsManipulated(UsersDTO.UsersManipulated.builder()
+        usersDTO.setUsersManipulated(UsersDTO.UsersManipulated.builder()
                 .username(username)
                 .nameAndSurname(nameAndSurname)
                 .lastStatus(lastStatus)

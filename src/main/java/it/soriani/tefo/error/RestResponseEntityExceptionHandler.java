@@ -48,6 +48,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return buildApiErrorResponse(400, ex.getMessageKey(), ex.getMessage());
     }
 
+    @ExceptionHandler({NotFoundException.class})
+    protected ResponseEntity<ApiError> handleConflict(NotFoundException ex) {
+        return buildApiErrorResponse(404, ex.getMessageKey(), ex.getMessage());
+    }
+
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         final List<ApiError> apiErrors = ex.getBindingResult().getAllErrors().stream()

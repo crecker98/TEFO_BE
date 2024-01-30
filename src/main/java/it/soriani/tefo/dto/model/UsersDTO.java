@@ -28,7 +28,7 @@ public class UsersDTO {
 
     private ContactsDTO contact;
 
-    private UsersManipulated contactsManipulated;
+    private UsersManipulated usersManipulated;
 
     @Data
     @Builder
