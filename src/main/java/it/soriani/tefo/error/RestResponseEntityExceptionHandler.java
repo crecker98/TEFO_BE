@@ -1,5 +1,6 @@
 package it.soriani.tefo.error;
 
+import it.soriani.tefo.constants.GenericConstants;
 import it.soriani.tefo.model.ApiError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -32,9 +33,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .build());
     }
 
-    @ExceptionHandler({ApplicationException.class, Exception.class})
+    @ExceptionHandler({ApplicationException.class})
     protected ResponseEntity<ApiError> handleConflict(ApplicationException ex) {
         return buildApiErrorResponse(500, ex.getMessageKey(), ex.getMessage());
+    }
+
+    @ExceptionHandler({Exception.class})
+    protected ResponseEntity<ApiError> handleConflict(Exception ex) {
+        return buildApiErrorResponse(500, GenericConstants.CODE_GENERIC_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler({CheckException.class})

@@ -99,10 +99,11 @@
             <version>6.4.2.Final</version>
         </dependency>
         <dependency>
-            <groupId>com.telegram4j</groupId>
-            <artifactId>tl-parser</artifactId>
-            <version>0.1.1</version>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>libphonenumber</artifactId>
+            <version>8.13.29</version>
         </dependency>
+
     </dependencies>
 
     <build>

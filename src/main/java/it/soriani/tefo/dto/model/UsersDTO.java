@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * @author christiansoriani on 25/01/24
  * @project TEFO_BE
@@ -25,5 +27,23 @@ public class UsersDTO {
     private byte[] data;
 
     private ContactsDTO contact;
+
+    private UsersManipulated contactsManipulated;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UsersManipulated {
+
+        private String username;
+
+        private String nameAndSurname;
+
+        private LocalDateTime lastStatus;
+
+        private String phoneNumber;
+
+    }
 
 }

@@ -30,7 +30,7 @@ spring:
         dialect: org.hibernate.community.dialect.SQLiteDialect
 
   datasource:
-    url: jdbc:sqlite:/Users/christiansoriani/Desktop/telegramForensic/org.telegram.messenger/files/cache4.db
+    url: jdbc:sqlite:/Users/christiansoriani/Desktop/testTele/org.telegram.messenger/files/cache4.db
     driver-class-name: org.sqlite.JDBC
 
 springdoc:

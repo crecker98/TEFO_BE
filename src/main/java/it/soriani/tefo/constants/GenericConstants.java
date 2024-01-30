@@ -12,5 +12,6 @@ public class GenericConstants {
 
     public static final String API_BASE_PATH = BASE_PATH + API_VERSION;
 
+    public static final String CODE_GENERIC_ERROR = "generic-error";
 
 }

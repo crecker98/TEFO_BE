@@ -1,5 +1,6 @@
 package it.soriani.tefo.aspect;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -47,12 +48,13 @@ public class LoggingAspect {
                 }
             }
             return result;
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             log.error(
-                    "Exit: {}.{}() with error = {}",
+                    "Exit: {}.{}() with error = {}, {}",
                     joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName(),
-                    e.getMessage());
+                    e.getMessage(),
+                    ExceptionUtils.getStackTrace(e));
             throw e;
         }
     }
