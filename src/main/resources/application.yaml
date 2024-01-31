@@ -28,6 +28,7 @@ spring:
           fetch_size: 1000
         generate_statistics: true
         dialect: org.hibernate.community.dialect.SQLiteDialect
+    show-sql: false
 
   datasource:
     url: jdbc:sqlite:/Users/christiansoriani/Desktop/testTele/org.telegram.messenger/files/cache4.db

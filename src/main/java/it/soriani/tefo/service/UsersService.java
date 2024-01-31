@@ -3,21 +3,26 @@ package it.soriani.tefo.service;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import it.soriani.tefo.constants.GenericConstants;
 import it.soriani.tefo.dto.model.UsersDTO;
 import it.soriani.tefo.entity.Users;
 import it.soriani.tefo.mapper.UsersMapper;
 import it.soriani.tefo.repository.UsersRepository;
+import it.soriani.tefo.specification.SpecificationUser;
 import it.soriani.tefo.validation.UsersValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -34,23 +39,23 @@ public class UsersService {
     private final UsersMapper usersMapper;
     private final UsersValidation usersValidation;
 
-    public List<UsersDTO> getAllUserFiltered(UsersDTO.UsersManipulated usersManipulated) {
-        return null;
+    public Page<UsersDTO> getAllUsers(Pageable pageable, UsersDTO.UsersManipulated usersManipulated) {
+        if (Objects.isNull(usersManipulated)) {
+            return getAllUsers(pageable);
+        } else {
+            Page<Users> usersList = usersRepository.findAll(SpecificationUser.getSpecification(usersManipulated), pageable);
+            return userConversion(usersList);
+        }
     }
 
-    public List<UsersDTO> getAllUserFromContacts() {
-        final List<Users> usersList = usersRepository.findAllByContact_MutualAndStatusIsNot(1, 0);
+    private Page<UsersDTO> getAllUsers(Pageable pageable) {
+        final Page<Users> usersList = usersRepository.findAllByStatusIsNot(pageable, 0);
         return userConversion(usersList);
     }
 
-    public List<UsersDTO> getAllUsers() {
-        final List<Users> usersList = usersRepository.findAllByStatusIsNot(0);
-        return userConversion(usersList);
-    }
-
-    private List<UsersDTO> userConversion(List<Users> usersList) {
-        usersValidation.checkUsersList(usersList);
-        final List<UsersDTO> usersDTOList = usersMapper.entityListToDtoList(usersList);
+    private Page<UsersDTO> userConversion(Page<Users> usersList) {
+        usersValidation.checkUsersList(usersList.getContent());
+        final Page<UsersDTO> usersDTOList = usersList.map(usersMapper::entityToDto);
         usersDTOList.forEach(UsersService::convertUsersManipulatedManipulated);
         return usersDTOList;
     }
@@ -63,14 +68,25 @@ public class UsersService {
             username = parsedName[1];
         }
 
-        LocalDateTime lastStatus = null;
+        LocalDateTime lastStatus;
         if (usersDTO.getStatus() != -100 && usersDTO.getStatus() != -101 && usersDTO.getStatus() != -102) {
             lastStatus = LocalDateTime.ofInstant(Instant.ofEpochSecond(usersDTO.getStatus()), TimeZone.getDefault().toZoneId());
         } else {
             lastStatus = LocalDateTime.now();
         }
 
-        byte[] data = usersDTO.getData();
+        String statusDate = lastStatus.format(DateTimeFormatter.ofPattern(GenericConstants.DATE_TIME_FORMAT_ITALY));
+
+        usersDTO.setUsersManipulated(UsersDTO.UsersManipulated.builder()
+                .username(username)
+                .nameAndSurname(nameAndSurname)
+                .lastStatus(statusDate)
+                .phoneNumber(getPhoneNumber(usersDTO.getData()))
+                .isInContactsList(Objects.nonNull(usersDTO.getContact()) && usersDTO.getContact().getMutual() != 0)
+                .build());
+    }
+
+    private static String getPhoneNumber(byte[] data) {
         String phone = null;
         for (int i = 0; i < data.length - 11; i++) {
             boolean isPhoneNumber = true;
@@ -101,12 +117,7 @@ public class UsersService {
             }
         }
 
-        usersDTO.setUsersManipulated(UsersDTO.UsersManipulated.builder()
-                .username(username)
-                .nameAndSurname(nameAndSurname)
-                .lastStatus(lastStatus)
-                .phoneNumber(phone)
-                .build());
+        return phone;
     }
 
 }

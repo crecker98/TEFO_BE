@@ -1,0 +1,176 @@
+{
+  "info": {
+    "_postman_id": "c01fe2a4-f930-4469-9dbb-11ea19dc489b",
+    "name": "TEFO_BE",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32471727"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "allUsers",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tefo/api/v1/users/allUsers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tefo",
+                "api",
+                "v1",
+                "users",
+                "allUsers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "allUsersPaginated",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tefo/api/v1/users/allUsers?page=0&size=100&sort=uid,DESC",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tefo",
+                "api",
+                "v1",
+                "users",
+                "allUsers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "100"
+                },
+                {
+                  "key": "sort",
+                  "value": "uid,DESC"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "allUsersFiltered",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nameAndSurname\": \"vincenzo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/tefo/api/v1/users/allUsers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tefo",
+                "api",
+                "v1",
+                "users",
+                "allUsers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "allContatcs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tefo/api/v1/contacts/allContacts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tefo",
+            "api",
+            "v1",
+            "contacts",
+            "allContacts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "allDialogs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tefo/api/v1/dialogs/allDialogs",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tefo",
+            "api",
+            "v1",
+            "dialogs",
+            "allDialogs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "allMessages",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tefo/api/v1/messages/allMessages",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tefo",
+            "api",
+            "v1",
+            "messages",
+            "allMessages"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

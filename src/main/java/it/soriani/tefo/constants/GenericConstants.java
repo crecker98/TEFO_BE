@@ -18,4 +18,6 @@ public class GenericConstants {
 
     public static final String NOT_FOUND_ERROR = "No %s found";
 
+    public static final String DATE_TIME_FORMAT_ITALY = "dd/MM/yyyy HH:mm:ss";
+
 }
