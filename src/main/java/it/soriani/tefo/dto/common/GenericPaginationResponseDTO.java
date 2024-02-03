@@ -1,4 +1,4 @@
-package it.soriani.tefo.dto.pagination;
+package it.soriani.tefo.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

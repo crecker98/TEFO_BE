@@ -1,6 +1,6 @@
 package it.soriani.tefo.utility;
 
-import it.soriani.tefo.dto.pagination.PageDTO;
+import it.soriani.tefo.dto.common.PageDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,8 +28,8 @@ public final class PaginationUtility {
                 .build();
     }
 
-    public static Pageable checkPagination(Integer page, Integer size, String sort, Pageable pageable) {
-        if (Objects.isNull(page) && Objects.isNull(size) && Objects.isNull(sort)) {
+    public static Pageable checkPagination(Integer page, Pageable pageable) {
+        if (Objects.isNull(page) || page <= 0) {
             pageable = Pageable.unpaged();
         }
         return pageable;

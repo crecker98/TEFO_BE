@@ -1,7 +1,7 @@
 package it.soriani.tefo.dto.response;
 
+import it.soriani.tefo.dto.common.GenericPaginationResponseDTO;
 import it.soriani.tefo.dto.model.UsersDTO;
-import it.soriani.tefo.dto.pagination.GenericPaginationResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -16,5 +16,5 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class UsersPaginatiedResponseDTO extends GenericPaginationResponseDTO<List<UsersDTO>> {
+public class UsersPaginatedResponseDTO extends GenericPaginationResponseDTO<List<UsersDTO>> {
 }

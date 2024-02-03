@@ -8,9 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.soriani.tefo.constants.GenericConstants;
 import it.soriani.tefo.dto.common.PageDTO;
-import it.soriani.tefo.dto.model.UsersDTO;
-import it.soriani.tefo.dto.response.UsersPaginatedResponseDTO;
-import it.soriani.tefo.service.UsersService;
+import it.soriani.tefo.dto.model.ChatsDTO;
+import it.soriani.tefo.dto.request.ChatsRequestDTO;
+import it.soriani.tefo.dto.response.ChatsPaginatedResponseDTO;
+import it.soriani.tefo.service.ChatsService;
 import it.soriani.tefo.utility.PaginationUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,27 +23,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author christiansoriani on 25/01/24
+ * @author christiansoriani on 02/02/24
  * @project TEFO_BE
  */
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(GenericConstants.API_BASE_PATH + UsersController.API_CONTEXT)
+@RequestMapping(GenericConstants.API_BASE_PATH + ChatsController.API_CONTEXT)
 @Slf4j
-public class UsersController {
+public class ChatsController {
 
-    protected static final String API_CONTEXT = "/users";
+    protected static final String API_CONTEXT = "/chats";
 
-    private final UsersService usersService;
+    private final ChatsService chatsService;
 
-    @PostMapping("/allUsers")
+    @PostMapping("/allChats")
     @Operation(
-            summary = "Retrieve all users from database",
-            description = "Retrieve all result from table users in database",
+            summary = "Retrieve all chats from database",
+            description = "Retrieve all result from table chats in database",
             method = "POST",
-            tags = "users",
-            operationId = "allUsers",
+            tags = "chats",
+            operationId = "allChats",
             parameters = {
                     @Parameter(
                             name = "page",
@@ -68,13 +69,22 @@ public class UsersController {
                             schema = @Schema(implementation = String.class)
                     )
             },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(
+                                    implementation = ChatsRequestDTO.class
+                            )
+                    ),
+                    description = "Chats parameters"
+            ),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(
-                                            implementation = UsersPaginatedResponseDTO.class
+                                            implementation = ChatsPaginatedResponseDTO.class
                                     )
                             ),
                             description = "List retrieved successfully"
@@ -94,14 +104,14 @@ public class UsersController {
             }
     )
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UsersPaginatedResponseDTO> getAllUsers(Pageable pageable, @RequestBody(required = false) UsersDTO.UsersManipulated usersManipulated) {
+    public ResponseEntity<ChatsPaginatedResponseDTO> getAllChats(Pageable pageable, @RequestBody(required = false) ChatsRequestDTO request) {
         pageable = PaginationUtility.checkPagination(pageable.getPageNumber(), pageable);
-        final Page<UsersDTO> users = usersService.getAllUsers(pageable, usersManipulated);
-        final PageDTO pageUsers = PaginationUtility.generatePagination(users);
+        final Page<ChatsDTO> chats = chatsService.getAllChats(pageable, request);
+        final PageDTO pageChats = PaginationUtility.generatePagination(chats);
         return ResponseEntity.ok()
-                .body(UsersPaginatedResponseDTO.builder()
-                        .payload(users.getContent())
-                        .page(pageUsers)
+                .body(ChatsPaginatedResponseDTO.builder()
+                        .payload(chats.getContent())
+                        .page(pageChats)
                         .build()
                 );
     }

@@ -1,5 +1,6 @@
 package it.soriani.tefo.dto.response;
 
+import it.soriani.tefo.dto.common.GenericResponseDTO;
 import it.soriani.tefo.dto.model.MessagesDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;

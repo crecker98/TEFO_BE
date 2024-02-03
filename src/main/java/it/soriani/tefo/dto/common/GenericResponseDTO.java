@@ -1,4 +1,4 @@
-package it.soriani.tefo.dto.response;
+package it.soriani.tefo.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

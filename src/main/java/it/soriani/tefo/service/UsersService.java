@@ -6,10 +6,10 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import it.soriani.tefo.constants.GenericConstants;
 import it.soriani.tefo.dto.model.UsersDTO;
 import it.soriani.tefo.entity.Users;
+import it.soriani.tefo.error.NotFoundException;
 import it.soriani.tefo.mapper.UsersMapper;
 import it.soriani.tefo.repository.UsersRepository;
 import it.soriani.tefo.specification.SpecificationUser;
-import it.soriani.tefo.validation.UsersValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +25,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.TimeZone;
 
+import static it.soriani.tefo.constants.GenericConstants.CODE_NOT_FOUND_ERROR;
+import static it.soriani.tefo.constants.GenericConstants.NOT_FOUND_ERROR;
+
 /**
  * @author christiansoriani on 24/01/24
  * @project TEFO_BE
@@ -37,7 +40,6 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final UsersMapper usersMapper;
-    private final UsersValidation usersValidation;
 
     public Page<UsersDTO> getAllUsers(Pageable pageable, UsersDTO.UsersManipulated usersManipulated) {
         if (Objects.isNull(usersManipulated)) {
@@ -54,7 +56,9 @@ public class UsersService {
     }
 
     private Page<UsersDTO> userConversion(Page<Users> usersList) {
-        usersValidation.checkUsersList(usersList.getContent());
+        if (usersList.isEmpty()) {
+            throw NotFoundException.of(CODE_NOT_FOUND_ERROR, String.format(NOT_FOUND_ERROR, "chats"));
+        }
         final Page<UsersDTO> usersDTOList = usersList.map(usersMapper::entityToDto);
         usersDTOList.forEach(UsersService::convertUsersManipulatedManipulated);
         return usersDTOList;

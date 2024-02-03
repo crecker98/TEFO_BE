@@ -14,6 +14,15 @@
           "request": {
             "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "http://localhost:8080/tefo/api/v1/users/allUsers",
               "protocol": "http",
@@ -104,6 +113,99 @@
       ]
     },
     {
+      "name": "messages",
+      "item": [
+        {
+          "name": "allMessages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tefo/api/v1/messages/allMessages",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tefo",
+                "api",
+                "v1",
+                "messages",
+                "allMessages"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "dialogs",
+      "item": [
+        {
+          "name": "allDialogs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tefo/api/v1/dialogs/allDialogs",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tefo",
+                "api",
+                "v1",
+                "dialogs",
+                "allDialogs"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "allChats",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"left\" : false,\n    \"title\" : \"sistemi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/tefo/api/v1/chats/allChats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tefo",
+                "api",
+                "v1",
+                "chats",
+                "allChats"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "allContatcs",
       "request": {
         "method": "GET",
@@ -121,52 +223,6 @@
             "v1",
             "contacts",
             "allContacts"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "allDialogs",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/tefo/api/v1/dialogs/allDialogs",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "tefo",
-            "api",
-            "v1",
-            "dialogs",
-            "allDialogs"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "allMessages",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/tefo/api/v1/messages/allMessages",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "tefo",
-            "api",
-            "v1",
-            "messages",
-            "allMessages"
           ]
         }
       },
