@@ -41,6 +41,13 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final UsersMapper usersMapper;
 
+    public UsersDTO.UsersManipulated getUserById(Long id) {
+        Users users = usersRepository.findById(id).orElseThrow(() -> NotFoundException.of(CODE_NOT_FOUND_ERROR, String.format(NOT_FOUND_ERROR, "user")));
+        UsersDTO usersDTO = usersMapper.entityToDto(users);
+        convertUsersManipulatedManipulated(usersDTO);
+        return usersDTO.getUsersManipulated();
+    }
+
     public Page<UsersDTO> getAllUsers(Pageable pageable, UsersDTO.UsersManipulated usersManipulated) {
         if (Objects.isNull(usersManipulated)) {
             return getAllUsers(pageable);

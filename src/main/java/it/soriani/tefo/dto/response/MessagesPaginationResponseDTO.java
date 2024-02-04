@@ -1,6 +1,6 @@
 package it.soriani.tefo.dto.response;
 
-import it.soriani.tefo.dto.common.GenericResponseDTO;
+import it.soriani.tefo.dto.common.GenericPaginationResponseDTO;
 import it.soriani.tefo.dto.model.MessagesDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +18,5 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MessagesListResponseDTO extends GenericResponseDTO<List<MessagesDTO>> {
+public class MessagesPaginationResponseDTO extends GenericPaginationResponseDTO<List<MessagesDTO>> {
 }

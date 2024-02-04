@@ -1,6 +1,5 @@
 package it.soriani.tefo.dto.model;
 
-import it.soriani.tefo.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +30,25 @@ public class MessagesDTO {
 
     private Integer out;
 
-    private Users users;
+    private MessagesManiputaled messagesManiputaled;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MessagesManiputaled {
+
+        private String content;
+        private UsersDTO.UsersManipulated fromUser;
+        private UsersDTO.UsersManipulated toUser;
+        private Boolean isRead;
+        private Boolean isSent;
+        private Boolean pinned;
+        private String date;
+        private Integer countForward;
+        private Boolean hasMedia;
+        private String mimeType;
+        private String media;
+    }
 
 }

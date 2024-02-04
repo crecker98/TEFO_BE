@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UsersDTO {
 
-    private int uid;
+    private long uid;
 
     private String name;
 

@@ -11,7 +11,7 @@ import java.util.List;
  * @project TEFO_BE
  */
 
-@Mapper(componentModel = "spring", uses = {UsersMapper.class})
+@Mapper(componentModel = "spring")
 public interface MessagesMapper extends GenericMapper<Messages, MessagesDTO> {
 
     List<MessagesDTO> entityListToDtoList(List<Messages> entityList);

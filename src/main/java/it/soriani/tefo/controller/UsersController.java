@@ -43,6 +43,14 @@ public class UsersController {
             method = "POST",
             tags = "users",
             operationId = "allUsers",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(
+                                    implementation = UsersDTO.UsersManipulated.class
+                            )
+                    )
+            ),
             parameters = {
                     @Parameter(
                             name = "page",

@@ -23,7 +23,7 @@ public class Users implements Serializable {
 
     @Id
     @Column(name = "uid", updatable = false, nullable = false)
-    private int uid;
+    private long uid;
 
     @Column(name = "name", nullable = false)
     private String name;
