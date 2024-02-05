@@ -38,6 +38,9 @@ public class Messages {
     @Column(name = "out", nullable = false)
     private Integer out;
 
+    @Column(name = "is_channel", nullable = false)
+    private Integer is_channel;
+
     @ManyToOne
     @JoinColumn(name = "uid")
     private Users users;

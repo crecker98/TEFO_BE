@@ -174,9 +174,8 @@ public class MessagesService {
             } else {
                 messagesDTO.getMessagesManiputaled().setFromUser(user);
             }
-        } else if (baseMessage.peerId() instanceof ImmutablePeerChat) {
-            ImmutablePeerChat peerChat = (ImmutablePeerChat) baseMessage.peerId();
-            ChatsDTO.ChatsManipulated chat = chatsService.getChatById(peerChat.chatId());
+        } else if (Objects.nonNull(baseMessage.groupedId())) {
+            ChatsDTO.ChatsManipulated chat = chatsService.getChatById(baseMessage.groupedId());
             messagesDTO.getMessagesManiputaled().setFromChat(chat);
         } else if (baseMessage.peerId() instanceof ImmutablePeerChannel) {
             ImmutablePeerChannel peerChat = (ImmutablePeerChannel) baseMessage.peerId();

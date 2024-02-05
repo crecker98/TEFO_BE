@@ -104,7 +104,7 @@ public class MessagesController {
             }
     )
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<MessagesPaginationResponseDTO> getAllMessages(Pageable pageable, @RequestBody MessagesRequestDTO messagesRequestDTO) {
+    public ResponseEntity<MessagesPaginationResponseDTO> getAllMessages(Pageable pageable, @RequestBody(required = false) MessagesRequestDTO messagesRequestDTO) {
         pageable = PaginationUtility.checkPagination(pageable.getPageNumber(), pageable);
         final Page<MessagesDTO> messages = messagesService.getAllMessages(pageable, messagesRequestDTO);
         final PageDTO pageMessages = PaginationUtility.generatePagination(messages);
