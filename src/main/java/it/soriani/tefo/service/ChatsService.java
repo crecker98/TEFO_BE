@@ -20,10 +20,7 @@ import telegram4j.tl.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.*;
 
 import static it.soriani.tefo.constants.GenericConstants.CODE_NOT_FOUND_ERROR;
 import static it.soriani.tefo.constants.GenericConstants.NOT_FOUND_ERROR;
@@ -42,10 +39,14 @@ public class ChatsService {
     private final ChatsMapper chatsMapper;
 
     public ChatsDTO.ChatsManipulated getChatById(Long id) {
-        Chats chats = chatsRepository.findById(id).orElseThrow(() -> NotFoundException.of(CODE_NOT_FOUND_ERROR, String.format(NOT_FOUND_ERROR, "chat")));
-        ChatsDTO chatsDTO = chatsMapper.entityToDto(chats);
-        convertChatsManipulated(chatsDTO);
-        return chatsDTO.getChatsManipulated();
+        Optional<Chats> chats = chatsRepository.findById(id);
+        if (chats.isEmpty()) {
+            return ChatsDTO.ChatsManipulated.builder().build();
+        } else {
+            ChatsDTO chatsDTO = chatsMapper.entityToDto(chats.get());
+            convertChatsManipulated(chatsDTO);
+            return chatsDTO.getChatsManipulated();
+        }
     }
 
     public Page<ChatsDTO> getAllChats(Pageable pageable, ChatsRequestDTO request) {

@@ -21,10 +21,7 @@ import telegram4j.tl.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static it.soriani.tefo.constants.GenericConstants.CODE_NOT_FOUND_ERROR;
@@ -44,6 +41,17 @@ public class MessagesService {
     private final MessagesMapper messagesMapper;
     private final UsersService usersService;
     private final ChatsService chatsService;
+
+    public MessagesDTO.MessagesManiputaled getMessageById(Integer id) {
+        Optional<Messages> messages = messagesRepository.findById(id);
+        if (messages.isEmpty()) {
+            return MessagesDTO.MessagesManiputaled.builder().build();
+        } else {
+            MessagesDTO messagesDTO = messagesMapper.entityToDto(messages.get());
+            convertMessagesManipulated(messagesDTO);
+            return messagesDTO.getMessagesManiputaled();
+        }
+    }
 
     public Page<MessagesDTO> getAllMessages(Pageable pageable, MessagesRequestDTO messagesRequestDTO) {
         Page<Messages> messages = messagesRepository.findAll(pageable);

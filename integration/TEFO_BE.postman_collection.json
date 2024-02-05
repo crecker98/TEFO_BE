@@ -150,12 +150,12 @@
       ]
     },
     {
-      "name": "dialogs",
+      "name": "Dialogs",
       "item": [
         {
           "name": "allDialogs",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [],
             "url": {
               "raw": "http://localhost:8080/tefo/api/v1/dialogs/allDialogs",

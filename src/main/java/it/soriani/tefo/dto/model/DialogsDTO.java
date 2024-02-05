@@ -30,4 +30,18 @@ public class DialogsDTO {
 
     private Boolean pinned;
 
+    private DialogsManipulated dialogsManipulated;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class DialogsManipulated {
+
+        private String lastDateOperation;
+        private Integer numeberOfMessagesNoread;
+        private MessagesDTO.MessagesManiputaled lastMessage;
+        private Boolean isPinned;
+    }
+
 }

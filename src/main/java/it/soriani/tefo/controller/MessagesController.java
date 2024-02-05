@@ -107,11 +107,11 @@ public class MessagesController {
     public ResponseEntity<MessagesPaginationResponseDTO> getAllMessages(Pageable pageable, @RequestBody MessagesRequestDTO messagesRequestDTO) {
         pageable = PaginationUtility.checkPagination(pageable.getPageNumber(), pageable);
         final Page<MessagesDTO> messages = messagesService.getAllMessages(pageable, messagesRequestDTO);
-        final PageDTO pageUsers = PaginationUtility.generatePagination(messages);
+        final PageDTO pageMessages = PaginationUtility.generatePagination(messages);
         return ResponseEntity.ok()
                 .body(MessagesPaginationResponseDTO.builder()
                         .payload(messages.getContent())
-                        .page(pageUsers)
+                        .page(pageMessages)
                         .build()
                 );
     }
