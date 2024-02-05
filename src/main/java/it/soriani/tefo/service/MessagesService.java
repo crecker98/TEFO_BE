@@ -2,8 +2,10 @@ package it.soriani.tefo.service;
 
 import io.netty.buffer.Unpooled;
 import it.soriani.tefo.constants.GenericConstants;
+import it.soriani.tefo.dto.model.ChatsDTO;
 import it.soriani.tefo.dto.model.MessagesDTO;
 import it.soriani.tefo.dto.model.UsersDTO;
+import it.soriani.tefo.dto.request.MessagesRequestDTO;
 import it.soriani.tefo.entity.Messages;
 import it.soriani.tefo.error.NotFoundException;
 import it.soriani.tefo.mapper.MessagesMapper;
@@ -11,6 +13,7 @@ import it.soriani.tefo.repository.MessagesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import telegram4j.tl.*;
@@ -18,6 +21,8 @@ import telegram4j.tl.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicReference;
@@ -38,10 +43,54 @@ public class MessagesService {
     private final MessagesRepository messagesRepository;
     private final MessagesMapper messagesMapper;
     private final UsersService usersService;
+    private final ChatsService chatsService;
 
-    public Page<MessagesDTO> getAllMessages(Pageable pageable) {
+    public Page<MessagesDTO> getAllMessages(Pageable pageable, MessagesRequestDTO messagesRequestDTO) {
         Page<Messages> messages = messagesRepository.findAll(pageable);
-        return convertMessages(messages);
+        Page<MessagesDTO> messagesDTOS = convertMessages(messages);
+        if (Objects.isNull(messagesRequestDTO)) {
+            return messagesDTOS;
+        } else {
+            List<MessagesDTO> messagesDTOList = new ArrayList<>(messagesDTOS.getContent());
+            if (Objects.nonNull(messagesRequestDTO.getNamSurnameUser())) {
+                filterMessagesByUser(messagesDTOList, messagesRequestDTO.getNamSurnameUser());
+            }
+            if (Objects.nonNull(messagesRequestDTO.getIsSent())) {
+                filterMessagesByIsSent(messagesDTOList, messagesRequestDTO.getIsSent());
+            }
+            if (Objects.nonNull(messagesRequestDTO.getIsDelivered())) {
+                filterMessagesByIsDelivered(messagesDTOList, messagesRequestDTO.getIsDelivered());
+            }
+            if (Objects.nonNull(messagesRequestDTO.getIsRead())) {
+                filterMessagesByIsRead(messagesDTOList, messagesRequestDTO.getIsRead());
+            }
+            if (Objects.nonNull(messagesRequestDTO.getHasMedia())) {
+                filterMessagesByHasMedia(messagesDTOList, messagesRequestDTO.getHasMedia());
+            }
+
+            return new PageImpl<>(messagesDTOList, pageable, messagesDTOList.size());
+        }
+
+    }
+
+    private void filterMessagesByIsDelivered(List<MessagesDTO> messagesList, Boolean isDelivered) {
+        messagesList.removeIf(messages -> (Objects.nonNull(messages.getMessagesManiputaled()) && !Objects.equals(messages.getMessagesManiputaled().getIsDelivered(), isDelivered)) || Objects.isNull(messages.getMessagesManiputaled()));
+    }
+
+    private void filterMessagesByIsRead(List<MessagesDTO> messagesList, Boolean isRead) {
+        messagesList.removeIf(messages -> (Objects.nonNull(messages.getMessagesManiputaled()) && !Objects.equals(messages.getMessagesManiputaled().getIsRead(), isRead)) || Objects.isNull(messages.getMessagesManiputaled()));
+    }
+
+    private void filterMessagesByIsSent(List<MessagesDTO> messagesList, Boolean isSent) {
+        messagesList.removeIf(messages -> (Objects.nonNull(messages.getMessagesManiputaled()) && !Objects.equals(messages.getMessagesManiputaled().getIsSent(), isSent)) || Objects.isNull(messages.getMessagesManiputaled()));
+    }
+
+    private void filterMessagesByUser(List<MessagesDTO> messagesList, String namSurnameUser) {
+        messagesList.removeIf(messages -> (Objects.nonNull(messages.getMessagesManiputaled()) && !Objects.equals(messages.getMessagesManiputaled().getFromUser().getNameAndSurname(), namSurnameUser)) || Objects.isNull(messages.getMessagesManiputaled()));
+    }
+
+    private void filterMessagesByHasMedia(List<MessagesDTO> messagesList, Boolean hasMedia) {
+        messagesList.removeIf(messages -> (Objects.nonNull(messages.getMessagesManiputaled()) && !Objects.equals(messages.getMessagesManiputaled().getHasMedia(), hasMedia)) || Objects.isNull(messages.getMessagesManiputaled()));
     }
 
     public Page<MessagesDTO> convertMessages(Page<Messages> messages) {
@@ -58,12 +107,8 @@ public class MessagesService {
             Message message = TlDeserializer.deserialize(Unpooled.copiedBuffer(messagesDTO.getData()));
             if (message instanceof ImmutableBaseMessage) {
                 ImmutableBaseMessage baseMessage = (ImmutableBaseMessage) message;
-                messagesDTO.setMessagesManiputaled(buildMessagesManipulated(baseMessage));
-                if (messagesDTO.getOut() == 1) {
-                    messagesDTO.getMessagesManiputaled().setToUser(buildUsersManipulated(baseMessage));
-                } else {
-                    messagesDTO.getMessagesManiputaled().setFromUser(buildUsersManipulated(baseMessage));
-                }
+                messagesDTO.setMessagesManiputaled(buildMessagesManipulated(messagesDTO, baseMessage));
+                manageUser(messagesDTO, baseMessage);
             }
         } catch (IllegalArgumentException e) {
             log.warn("Error while converting messages data to chat manipulated", e);
@@ -71,8 +116,7 @@ public class MessagesService {
 
     }
 
-    private static MessagesDTO.MessagesManiputaled buildMessagesManipulated(ImmutableBaseMessage baseMessage) {
-
+    private static MessagesDTO.MessagesManiputaled buildMessagesManipulated(MessagesDTO messagesDTO, ImmutableBaseMessage baseMessage) {
         boolean hasmedia = false;
         String mimeType = null;
         AtomicReference<String> media = new AtomicReference<>();
@@ -94,12 +138,16 @@ public class MessagesService {
                     });
 
                 }
+            } else if (baseMessage.media() instanceof ImmutableMessageMediaPhoto) {
+                hasmedia = true;
             }
         }
 
         return MessagesDTO.MessagesManiputaled.builder()
                 .content(baseMessage.message())
-                .isSent(baseMessage.out())
+                .isSent(messagesDTO.getReadState() == 2 || messagesDTO.getReadState() == 3)
+                .isRead(messagesDTO.getReadState() == 3)
+                .isDelivered(messagesDTO.getOut() == 0)
                 .pinned(baseMessage.pinned())
                 .date(LocalDateTime.ofInstant(Instant.ofEpochSecond(baseMessage.date()), TimeZone.getDefault().toZoneId()).format(DateTimeFormatter.ofPattern(GenericConstants.DATE_TIME_FORMAT_ITALY)))
                 .countForward(baseMessage.forwards())
@@ -109,13 +157,25 @@ public class MessagesService {
                 .build();
     }
 
-    private UsersDTO.UsersManipulated buildUsersManipulated(ImmutableBaseMessage baseMessage) {
+    private void manageUser(MessagesDTO messagesDTO, ImmutableBaseMessage baseMessage) {
         if (baseMessage.peerId() instanceof ImmutablePeerUser) {
             ImmutablePeerUser peerUser = (ImmutablePeerUser) baseMessage.peerId();
-            return usersService.getUserById(peerUser.userId());
+            UsersDTO.UsersManipulated user = usersService.getUserById(peerUser.userId());
+            if (messagesDTO.getOut() == 1) {
+                messagesDTO.getMessagesManiputaled().setToUser(user);
+            } else {
+                messagesDTO.getMessagesManiputaled().setFromUser(user);
+            }
+        } else if (baseMessage.peerId() instanceof ImmutablePeerChat) {
+            ImmutablePeerChat peerChat = (ImmutablePeerChat) baseMessage.peerId();
+            ChatsDTO.ChatsManipulated chat = chatsService.getChatById(peerChat.chatId());
+            messagesDTO.getMessagesManiputaled().setFromChat(chat);
+        } else if (baseMessage.peerId() instanceof ImmutablePeerChannel) {
+            ImmutablePeerChannel peerChat = (ImmutablePeerChannel) baseMessage.peerId();
+            ChatsDTO.ChatsManipulated chat = chatsService.getChatById(peerChat.channelId());
+            messagesDTO.getMessagesManiputaled().setFromChat(chat);
         }
 
-        return null;
     }
 
 }

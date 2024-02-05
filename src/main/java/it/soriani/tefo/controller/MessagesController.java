@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.soriani.tefo.constants.GenericConstants;
 import it.soriani.tefo.dto.common.PageDTO;
 import it.soriani.tefo.dto.model.MessagesDTO;
+import it.soriani.tefo.dto.request.MessagesRequestDTO;
 import it.soriani.tefo.dto.response.MessagesPaginationResponseDTO;
 import it.soriani.tefo.service.MessagesService;
 import it.soriani.tefo.utility.PaginationUtility;
@@ -19,10 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author christiansoriani on 28/01/24
@@ -71,6 +69,15 @@ public class MessagesController {
                             schema = @Schema(implementation = String.class)
                     )
             },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(
+                                    implementation = MessagesRequestDTO.class
+                            )
+                    ),
+                    description = "Messages request object"
+            ),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -97,9 +104,9 @@ public class MessagesController {
             }
     )
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<MessagesPaginationResponseDTO> getAllMessages(Pageable pageable) {
+    public ResponseEntity<MessagesPaginationResponseDTO> getAllMessages(Pageable pageable, @RequestBody MessagesRequestDTO messagesRequestDTO) {
         pageable = PaginationUtility.checkPagination(pageable.getPageNumber(), pageable);
-        final Page<MessagesDTO> messages = messagesService.getAllMessages(pageable);
+        final Page<MessagesDTO> messages = messagesService.getAllMessages(pageable, messagesRequestDTO);
         final PageDTO pageUsers = PaginationUtility.generatePagination(messages);
         return ResponseEntity.ok()
                 .body(MessagesPaginationResponseDTO.builder()

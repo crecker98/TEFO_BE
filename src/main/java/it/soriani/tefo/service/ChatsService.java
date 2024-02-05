@@ -41,6 +41,13 @@ public class ChatsService {
     private final ChatsRepository chatsRepository;
     private final ChatsMapper chatsMapper;
 
+    public ChatsDTO.ChatsManipulated getChatById(Long id) {
+        Chats chats = chatsRepository.findById(id).orElseThrow(() -> NotFoundException.of(CODE_NOT_FOUND_ERROR, String.format(NOT_FOUND_ERROR, "chat")));
+        ChatsDTO chatsDTO = chatsMapper.entityToDto(chats);
+        convertChatsManipulated(chatsDTO);
+        return chatsDTO.getChatsManipulated();
+    }
+
     public Page<ChatsDTO> getAllChats(Pageable pageable, ChatsRequestDTO request) {
         Page<Chats> chatsList = chatsRepository.findAll(pageable);
         Page<ChatsDTO> chatsDTOS = convertChats(chatsList);

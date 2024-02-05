@@ -113,13 +113,22 @@
       ]
     },
     {
-      "name": "messages",
+      "name": "Messages",
       "item": [
         {
           "name": "allMessages",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"hasMedia\" : true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "http://localhost:8080/tefo/api/v1/messages/allMessages",
               "protocol": "http",
@@ -206,27 +215,32 @@
       ]
     },
     {
-      "name": "allContatcs",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/tefo/api/v1/contacts/allContacts",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "tefo",
-            "api",
-            "v1",
-            "contacts",
-            "allContacts"
-          ]
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "allContatcs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tefo/api/v1/contacts/allContacts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tefo",
+                "api",
+                "v1",
+                "contacts",
+                "allContacts"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     }
   ]
 }

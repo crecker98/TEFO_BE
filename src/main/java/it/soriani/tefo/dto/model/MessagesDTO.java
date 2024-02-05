@@ -41,8 +41,10 @@ public class MessagesDTO {
         private String content;
         private UsersDTO.UsersManipulated fromUser;
         private UsersDTO.UsersManipulated toUser;
-        private Boolean isRead;
+        private ChatsDTO.ChatsManipulated fromChat;
         private Boolean isSent;
+        private Boolean isDelivered;
+        private Boolean isRead;
         private Boolean pinned;
         private String date;
         private Integer countForward;

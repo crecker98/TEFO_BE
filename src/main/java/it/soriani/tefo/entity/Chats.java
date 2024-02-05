@@ -26,7 +26,7 @@ public class Chats implements Serializable {
 
     @Id
     @Column(name = "uid", updatable = false, nullable = false)
-    private Integer uid;
+    private Long uid;
 
     @Column(name = "name", nullable = false)
     private String name;
