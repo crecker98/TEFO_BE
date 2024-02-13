@@ -17,11 +17,8 @@ import lombok.NoArgsConstructor;
 public class ChatsDTO {
 
     private Integer uid;
-
     private String name;
-
     private byte[] data;
-
     private ChatsManipulated chatsManipulated;
 
     @Data
@@ -47,6 +44,5 @@ public class ChatsDTO {
         private boolean canChangeInfo;
         private boolean canInviteUsers;
     }
-
 
 }

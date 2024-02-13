@@ -94,7 +94,7 @@ public class MessagesService {
     }
 
     private void filterMessagesByUser(List<MessagesDTO> messagesList, String namSurnameUser) {
-        messagesList.removeIf(messages -> (Objects.nonNull(messages.getMessagesManiputaled()) && !Objects.equals(messages.getMessagesManiputaled().getFromUser().getNameAndSurname(), namSurnameUser)) || Objects.isNull(messages.getMessagesManiputaled()));
+        messagesList.removeIf(messages -> Objects.nonNull(messages.getMessagesManiputaled()) && Objects.nonNull(messages.getMessagesManiputaled().getFromUser()) && !Objects.equals(messages.getMessagesManiputaled().getFromUser().getNameAndSurname(), namSurnameUser) || Objects.isNull(messages.getMessagesManiputaled()));
     }
 
     private void filterMessagesByHasMedia(List<MessagesDTO> messagesList, Boolean hasMedia) {

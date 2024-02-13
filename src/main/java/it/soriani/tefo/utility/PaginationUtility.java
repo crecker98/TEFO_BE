@@ -29,7 +29,7 @@ public final class PaginationUtility {
     }
 
     public static Pageable checkPagination(Integer page, Pageable pageable) {
-        if (Objects.isNull(page) || page <= 0) {
+        if (Objects.isNull(page) || page < 0) {
             pageable = Pageable.unpaged();
         }
         return pageable;
